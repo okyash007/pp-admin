@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -28,7 +29,7 @@ import {
   Loader2
 } from "lucide-react";
 
-const Creator = ({ creator, onCreatorUpdate }) => {
+const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
   const [identityDialogOpen, setIdentityDialogOpen] = useState(false);
   const [bankDialogOpen, setBankDialogOpen] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
@@ -109,47 +110,47 @@ const Creator = ({ creator, onCreatorUpdate }) => {
     }
   };
 
-  return (
-    <div className="space-y-6 p-6">
-      {/* Main Creator Card */}
-      <Card className="overflow-hidden">
-        <CardHeader className="bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <img
-                  src={creator.image?.src}
-                  alt={`${creator.firstName} ${creator.lastName}`}
-                  className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg"
-                />
-                {creator.verified && (
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 text-white" />
-                  </div>
-                )}
+  const profileHeader = (
+    <div className={`bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 ${embedded ? 'p-4 rounded-lg' : 'p-4 md:p-6'}`}>
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+        <div className="flex items-center space-x-4">
+          <div className="relative shrink-0">
+            <Avatar className="w-16 h-16 border-4 border-white shadow-lg">
+              <AvatarImage src={creator.image?.src} alt={`${creator.firstName} ${creator.lastName}`} />
+              <AvatarFallback className="text-lg font-semibold">
+                {creator.firstName?.[0]}{creator.lastName?.[0]}
+              </AvatarFallback>
+            </Avatar>
+            {creator.verified && (
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center ring-2 ring-white">
+                <CheckCircle className="w-4 h-4 text-white" />
               </div>
-              <div>
-                <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {creator.firstName} {creator.lastName}
-                </CardTitle>
-                <CardDescription className="text-lg text-gray-600 dark:text-gray-300">
-                  @{creator.username}
-                </CardDescription>
-                <div className="flex items-center space-x-2 mt-2">
-                  {getStatusBadge(creator.verified, creator.approved)}
-                  {getRoleBadge(creator.role)}
-                </div>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-500 dark:text-gray-400">Creator ID</div>
-              <div className="font-mono text-lg font-semibold">{creator.creator_id}</div>
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white truncate">
+              {creator.firstName} {creator.lastName}
+            </h2>
+            <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 truncate">
+              @{creator.username}
+            </p>
+            <div className="flex items-center flex-wrap gap-2 mt-2">
+              {getStatusBadge(creator.verified, creator.approved)}
+              {getRoleBadge(creator.role)}
             </div>
           </div>
-        </CardHeader>
-        
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        </div>
+        <div className="text-left sm:text-right w-full sm:w-auto">
+          <div className="text-sm text-gray-500 dark:text-gray-400">Creator ID</div>
+          <div className="font-mono text-base md:text-lg font-semibold break-all">{creator.creator_id}</div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const mainContent = (
+    <div className={`${embedded ? 'px-2 py-4 md:px-4 md:py-6' : 'px-4 py-4 md:px-6 md:py-6'}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Contact Information */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
@@ -201,7 +202,7 @@ const Creator = ({ creator, onCreatorUpdate }) => {
               <Shield className="w-5 h-5 mr-2" />
               Onboarding Status
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <span className="text-sm font-medium">Step Completed</span>
                 <span className="text-lg font-bold text-blue-600">{creator.onboarding?.step || 0}/3</span>
@@ -419,9 +420,29 @@ const Creator = ({ creator, onCreatorUpdate }) => {
               </DialogContent>
             </Dialog>
           </div>
-        </CardContent>
-      </Card>
     </div>
+  );
+
+  // If embedded (used in dialog), return without outer card
+  if (embedded) {
+    return (
+      <>
+        {profileHeader}
+        {mainContent}
+      </>
+    );
+  }
+
+  // Otherwise, wrap in card for standalone use
+  return (
+    <Card className="overflow-hidden space-y-6">
+      <CardHeader className="p-0">
+        {profileHeader}
+      </CardHeader>
+      <CardContent className="p-0">
+        {mainContent}
+      </CardContent>
+    </Card>
   );
 };
 

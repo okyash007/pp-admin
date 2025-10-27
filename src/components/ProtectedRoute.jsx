@@ -2,9 +2,15 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 
 export const ProtectedRoute = ({ children, requireAdmin = false }) => {
-  const { isAuthenticated, loading, user } = useAuthStore();
+  const { isAuthenticated, loading, user, token } = useAuthStore();
   const location = useLocation();
 
+  // If not loading and no token, redirect to login immediately
+  if (!loading && !token) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Show loading state while authentication is being checked
   if (loading || !user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
