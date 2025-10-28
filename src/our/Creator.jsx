@@ -76,7 +76,7 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
 
     setIsApproving(true);
     try {
-      const response = await fetch(`/api/creator/verify/${creator._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/creator/verify/${creator._id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
