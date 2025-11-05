@@ -58,6 +58,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/payout/:creator_id"
+          element={
+            <ProtectedRoute requireAdmin={true}>
+              <Payouts />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

@@ -57,6 +57,22 @@ const DashboardPage = () => {
     setDialogOpen(true);
   };
 
+  const handleCreatorUpdate = (updatedCreator) => {
+    // Update the creator in the list
+    if (creators && updatedCreator) {
+      setCreators(creators.map(c => 
+        c._id === updatedCreator._id || c.creator_id === updatedCreator.creator_id 
+          ? updatedCreator 
+          : c
+      ));
+    }
+    // Update selected creator if it's the same one
+    if (selectedCreator && updatedCreator && 
+        (selectedCreator._id === updatedCreator._id || selectedCreator.creator_id === updatedCreator.creator_id)) {
+      setSelectedCreator(updatedCreator);
+    }
+  };
+
   if (!creators) {
     return <div className="p-8 text-center">Loading...</div>;
   }
@@ -118,7 +134,13 @@ const DashboardPage = () => {
               Complete information for {selectedCreator?.firstName} {selectedCreator?.lastName}
             </DialogDescription>
           </DialogHeader>
-          {selectedCreator && <Creator creator={selectedCreator} embedded />}
+          {selectedCreator && (
+            <Creator 
+              creator={selectedCreator} 
+              embedded 
+              onCreatorUpdate={handleCreatorUpdate}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -26,14 +28,27 @@ import {
   Building,
   Hash,
   CheckCircle2,
-  Loader2
+  Loader2,
+  Edit,
+  Save,
+  X,
+  DollarSign
 } from "lucide-react";
 
 const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
+  const navigate = useNavigate();
   const [identityDialogOpen, setIdentityDialogOpen] = useState(false);
   const [bankDialogOpen, setBankDialogOpen] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
   const [approveSuccess, setApproveSuccess] = useState(false);
+  const [isEditingRazorpay, setIsEditingRazorpay] = useState(false);
+  const [razorpayAccountId, setRazorpayAccountId] = useState(creator?.razorpay_account_id || "");
+  const [isSavingRazorpay, setIsSavingRazorpay] = useState(false);
+
+  // Sync razorpay_account_id when creator prop changes
+  useEffect(() => {
+    setRazorpayAccountId(creator?.razorpay_account_id || "");
+  }, [creator?.razorpay_account_id]);
 
   if (!creator) {
     return (
@@ -68,9 +83,62 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
     );
   };
 
+  const handleUpdateRazorpayAccountId = async () => {
+    if (!creator?._id) {
+      console.error('Creator ID not found');
+      return;
+    }
+
+    setIsSavingRazorpay(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/creator/profile/${creator._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          razorpay_account_id: razorpayAccountId.trim()
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update Razorpay account ID');
+      }
+
+      const result = await response.json();
+      // Handle ApiResponse structure: { data: {...}, message: "...", statusCode: ... }
+      const updatedCreator = result.data || result;
+      
+      // Call the parent component's update function if provided
+      if (onCreatorUpdate) {
+        onCreatorUpdate(updatedCreator);
+      }
+      
+      setIsEditingRazorpay(false);
+      console.log('Razorpay account ID updated successfully:', updatedCreator);
+    } catch (error) {
+      console.error('Error updating Razorpay account ID:', error);
+      alert(`Error updating Razorpay account ID: ${error.message}`);
+    } finally {
+      setIsSavingRazorpay(false);
+    }
+  };
+
+  const handleCancelEditRazorpay = () => {
+    setRazorpayAccountId(creator?.razorpay_account_id || "");
+    setIsEditingRazorpay(false);
+  };
+
   const handleApproveCreator = async () => {
     if (!creator?._id) {
       console.error('Creator ID not found');
+      return;
+    }
+
+    // Check if razorpay_account_id exists
+    if (!creator.razorpay_account_id && !razorpayAccountId.trim()) {
+      alert('Please add Razorpay Account ID before verifying the creator.');
       return;
     }
 
@@ -90,7 +158,10 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
         throw new Error(errorData.message || 'Failed to approve creator');
       }
 
-      const updatedCreator = await response.json();
+      const result = await response.json();
+      // Handle ApiResponse structure: { data: { creator: {...}, overlay: {...}, ... }, message: "...", statusCode: ... }
+      const responseData = result.data || result;
+      const updatedCreator = responseData.creator || responseData;
       
       // Call the parent component's update function if provided
       if (onCreatorUpdate) {
@@ -231,6 +302,88 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
 
           <Separator className="my-6" />
 
+          {/* Razorpay Account ID Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+              <CreditCard className="w-5 h-5 mr-2" />
+              Razorpay Account ID
+            </h3>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              {isEditingRazorpay ? (
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Razorpay Account ID
+                    </label>
+                    <Input
+                      type="text"
+                      value={razorpayAccountId}
+                      onChange={(e) => setRazorpayAccountId(e.target.value)}
+                      placeholder="Enter Razorpay Account ID (e.g., acc_xxxxx)"
+                      className="w-full"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleUpdateRazorpayAccountId}
+                      disabled={isSavingRazorpay}
+                      size="sm"
+                      className="flex items-center space-x-2"
+                    >
+                      {isSavingRazorpay ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Save className="w-4 h-4" />
+                      )}
+                      <span>{isSavingRazorpay ? 'Saving...' : 'Save'}</span>
+                    </Button>
+                    <Button
+                      onClick={handleCancelEditRazorpay}
+                      disabled={isSavingRazorpay}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center space-x-2"
+                    >
+                      <X className="w-4 h-4" />
+                      <span>Cancel</span>
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    {creator.razorpay_account_id || razorpayAccountId ? (
+                      <div className="space-y-1">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">Account ID</span>
+                        <div className="font-mono text-base font-medium break-all">
+                          {creator.razorpay_account_id || razorpayAccountId}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">No Razorpay Account ID added</span>
+                        <div className="text-sm text-amber-600 dark:text-amber-400">
+                          Please add Razorpay Account ID before verifying the creator
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <Button
+                    onClick={() => setIsEditingRazorpay(true)}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2 ml-4"
+                  >
+                    <Edit className="w-4 h-4" />
+                    <span>{creator.razorpay_account_id || razorpayAccountId ? 'Edit' : 'Add'}</span>
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <Separator className="my-6" />
+
           {/* Success Message */}
           {approveSuccess && (
             <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center space-x-2">
@@ -241,14 +394,24 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
             </div>
           )}
 
+          {/* Warning Message if Razorpay Account ID is missing */}
+          {!creator.approved && !(creator.razorpay_account_id || razorpayAccountId.trim()) && (
+            <div className="mb-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg flex items-center space-x-2">
+              <XCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              <span className="text-amber-800 dark:text-amber-200 font-medium">
+                Please add Razorpay Account ID before verifying the creator.
+              </span>
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3">
             {/* Approve Button - Only show if creator is not approved */}
             {!creator.approved && (
               <Button 
                 onClick={handleApproveCreator}
-                disabled={isApproving}
-                className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white"
+                disabled={isApproving || !(creator.razorpay_account_id || razorpayAccountId.trim())}
+                className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isApproving ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -256,6 +419,17 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
                   <CheckCircle2 className="w-4 h-4" />
                 )}
                 <span>{isApproving ? 'Approving...' : 'Approve Creator'}</span>
+              </Button>
+            )}
+            
+            {/* Payout Button - Only show if creator is approved */}
+            {creator.approved && (
+              <Button 
+                onClick={() => navigate(`/payout/${creator.creator_id}`)}
+                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <DollarSign className="w-4 h-4" />
+                <span>Payout</span>
               </Button>
             )}
             
