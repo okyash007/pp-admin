@@ -30,11 +30,11 @@ const navigation = [
     href: '/dashboard', 
     icon: LayoutDashboard,
   },
-  { 
-    name: 'Payouts', 
-    href: '/dashboard/payouts', 
-    icon: CreditCard,
-  },
+  // { 
+  //   name: 'Payouts', 
+  //   href: '/dashboard/payouts', 
+  //   icon: CreditCard,
+  // },
   { 
     name: 'Tickets', 
     href: '/dashboard/tickets', 

@@ -240,7 +240,7 @@ const TicketsPage = () => {
         </div>
         <div className="flex items-center gap-4">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
