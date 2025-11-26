@@ -20,7 +20,8 @@ import {
   LayoutDashboard, 
   CreditCard,
   LogOut, 
-  Shield
+  Shield,
+  MessageSquare
 } from 'lucide-react'
 
 const navigation = [
@@ -33,6 +34,11 @@ const navigation = [
     name: 'Payouts', 
     href: '/dashboard/payouts', 
     icon: CreditCard,
+  },
+  { 
+    name: 'Tickets', 
+    href: '/dashboard/tickets', 
+    icon: MessageSquare,
   },
 ]
 

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import PayoutsPage from "./pages/PayoutsPage";
+import TicketsPage from "./pages/TicketsPage";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { DashboardLayout } from "./components/DashboardLayout";
@@ -25,6 +26,14 @@ function Payouts() {
   return (
     <DashboardLayout>
       <PayoutsPage />
+    </DashboardLayout>
+  );
+}
+
+function Tickets() {
+  return (
+    <DashboardLayout>
+      <TicketsPage />
     </DashboardLayout>
   );
 }
@@ -63,6 +72,14 @@ function App() {
           element={
             <ProtectedRoute requireAdmin={true}>
               <Payouts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/tickets"
+          element={
+            <ProtectedRoute requireAdmin={true}>
+              <Tickets />
             </ProtectedRoute>
           }
         />
