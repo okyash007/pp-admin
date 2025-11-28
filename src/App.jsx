@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import PayoutsPage from "./pages/PayoutsPage";
 import TicketsPage from "./pages/TicketsPage";
+import NotificationsPage from "./pages/NotificationsPage";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { DashboardLayout } from "./components/DashboardLayout";
@@ -34,6 +35,14 @@ function Tickets() {
   return (
     <DashboardLayout>
       <TicketsPage />
+    </DashboardLayout>
+  );
+}
+
+function Notifications() {
+  return (
+    <DashboardLayout>
+      <NotificationsPage />
     </DashboardLayout>
   );
 }
@@ -80,6 +89,14 @@ function App() {
           element={
             <ProtectedRoute requireAdmin={true}>
               <Tickets />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/notifications"
+          element={
+            <ProtectedRoute requireAdmin={true}>
+              <Notifications />
             </ProtectedRoute>
           }
         />

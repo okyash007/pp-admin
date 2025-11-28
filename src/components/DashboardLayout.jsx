@@ -21,7 +21,8 @@ import {
   CreditCard,
   LogOut, 
   Shield,
-  MessageSquare
+  MessageSquare,
+  Bell
 } from 'lucide-react'
 
 const navigation = [
@@ -39,6 +40,11 @@ const navigation = [
     name: 'Tickets', 
     href: '/dashboard/tickets', 
     icon: MessageSquare,
+  },
+  { 
+    name: 'Notifications', 
+    href: '/dashboard/notifications', 
+    icon: Bell,
   },
 ]
 
