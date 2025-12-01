@@ -10,6 +10,7 @@ import DashboardPage from "./pages/DashboardPage";
 import PayoutsPage from "./pages/PayoutsPage";
 import TicketsPage from "./pages/TicketsPage";
 import NotificationsPage from "./pages/NotificationsPage";
+import CreatorsPage from "./pages/CreatorsPage";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { DashboardLayout } from "./components/DashboardLayout";
@@ -47,6 +48,14 @@ function Notifications() {
   );
 }
 
+function Creators() {
+  return (
+    <DashboardLayout>
+      <CreatorsPage />
+    </DashboardLayout>
+  );
+}
+
 function App() {
   const initialize = useAuthStore((state) => state.initialize);
 
@@ -64,7 +73,7 @@ function App() {
           path="/dashboard"
           element={
             <ProtectedRoute requireAdmin={true}>
-              <Dashboard />
+              <Creators />
             </ProtectedRoute>
           }
         />
@@ -99,6 +108,10 @@ function App() {
               <Notifications />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/dashboard/creators"
+          element={<Navigate to="/dashboard" replace />}
         />
       </Routes>
     </Router>
