@@ -88,25 +88,23 @@ export const DashboardLayout = ({ children }) => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full relative bg-gradient-to-br from-[#FEF18C]/20 via-[#FEF18C]/10 to-[#828BF8]/15">
         <Sidebar className="bg-white border-r-[4px]! border-black shadow-2xl">
-          <SidebarHeader className="h-34 px-5 py-6 bg-gradient-to-br from-[#828BF8] via-[#828BF8] to-[#5C66D4] border-b-[3px] border-black relative overflow-hidden">
+          <SidebarHeader className="h-34 px-5 py-10 bg-gradient-to-br from-[#828BF8] via-[#828BF8] to-[#5C66D4] border-b-[3px] border-black relative overflow-hidden flex items-center">
             {/* Animated background pattern */}
             <div className="absolute inset-0 opacity-20">
               <div className="absolute top-0 left-0 w-32 h-32 bg-[#FEF18C] rounded-full blur-3xl animate-pulse"></div>
               <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#FEF18C]/70 rounded-full blur-3xl animate-pulse delay-1000"></div>
             </div>
 
-            <div className="flex items-center relative z-10">
-              <div className="w-16 h-16 bg-gradient-to-br from-[#FEF18C] via-[#FEF18C] to-[#FEF18C]/80 border-[5px] border-black flex items-center justify-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                <Shield className="h-8 w-8 text-black" strokeWidth={2.5} />
-              </div>
-
-              <div className="flex flex-col flex-1 ml-3">
-                <h1 className="text-xl font-black text-white leading-tight uppercase tracking-tight">
-                  Admin Panel
-                </h1>
-                <p className="text-[10px] font-bold text-[#FEF18C] mt-0.5 uppercase tracking-wider">
-                  Control Center
-                </p>
+            <div className="flex items-center relative z-10 w-full">
+              <div className="flex flex-col flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl font-black text-white tracking-tight drop-shadow-[4px_4px_0px_rgba(0,0,0,0.3)] leading-none uppercase">
+                    POTATO<span className="text-[#FEF18C]">PAY.CO</span>
+                  </span>
+                </div>
+                <span className="text-[11px] text-white/90 font-bold tracking-wide mt-1 uppercase leading-3.5">
+                  ADMIN CONTROL CENTER
+                </span>
               </div>
             </div>
           </SidebarHeader>
