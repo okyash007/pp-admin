@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Clock, CheckCircle2 } from "lucide-react";
 import { 
   Dialog,
   DialogContent,
@@ -106,9 +107,15 @@ const DashboardPage = () => {
                 <TableCell>{getStatusBadge(creator.verified, creator.approved)}</TableCell>
                 <TableCell>
                   {creator.onboarding?.completed ? (
-                    <span className="text-green-600">Completed</span>
+                    <Badge className="bg-green-500 text-white border border-green-600 rounded-md px-2 py-1">
+                      <CheckCircle2 className="w-3 h-3 mr-1.5" />
+                      Completed
+                    </Badge>
                   ) : (
-                    <span className="text-orange-600">In Progress</span>
+                    <Badge className="bg-blue-500 text-blue-200 border border-black rounded-md px-2 py-1">
+                      <Clock className="w-3 h-3 mr-1.5" />
+                      In Progress
+                    </Badge>
                   )}
                 </TableCell>
                 <TableCell>

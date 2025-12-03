@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import AlertDialog from "@/components/AlertDialog";
 import { 
   User, 
   Mail, 
@@ -44,6 +45,7 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
   const [isEditingRazorpay, setIsEditingRazorpay] = useState(false);
   const [razorpayAccountId, setRazorpayAccountId] = useState(creator?.razorpay_account_id || "");
   const [isSavingRazorpay, setIsSavingRazorpay] = useState(false);
+  const [alertDialog, setAlertDialog] = useState({ open: false, message: "", type: "info" });
 
   // Sync razorpay_account_id when creator prop changes
   useEffect(() => {
@@ -119,7 +121,7 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
       console.log('Razorpay account ID updated successfully:', updatedCreator);
     } catch (error) {
       console.error('Error updating Razorpay account ID:', error);
-      alert(`Error updating Razorpay account ID: ${error.message}`);
+      setAlertDialog({ open: true, message: `Error updating Razorpay account ID: ${error.message}`, type: "error" });
     } finally {
       setIsSavingRazorpay(false);
     }
@@ -138,7 +140,7 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
 
     // Check if razorpay_account_id exists
     if (!creator.razorpay_account_id && !razorpayAccountId.trim()) {
-      alert('Please add Razorpay Account ID before verifying the creator.');
+      setAlertDialog({ open: true, message: 'Please add Razorpay Account ID before verifying the creator.', type: "error" });
       return;
     }
 
@@ -175,7 +177,7 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
       console.log('Creator approved successfully:', updatedCreator);
     } catch (error) {
       console.error('Error approving creator:', error);
-      alert(`Error approving creator: ${error.message}`);
+      setAlertDialog({ open: true, message: `Error approving creator: ${error.message}`, type: "error" });
     } finally {
       setIsApproving(false);
     }
@@ -616,6 +618,14 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
       <CardContent className="p-0">
         {mainContent}
       </CardContent>
+
+      {/* Alert Dialog */}
+      <AlertDialog
+        open={alertDialog.open}
+        onOpenChange={(open) => setAlertDialog({ ...alertDialog, open })}
+        message={alertDialog.message}
+        type={alertDialog.type}
+      />
     </Card>
   );
 };

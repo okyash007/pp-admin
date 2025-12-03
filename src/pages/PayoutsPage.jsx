@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import AlertDialog from "@/components/AlertDialog";
 import Tips from "../our/Tips";
 import TipAmounts from "../our/TipAmounts";
 
 const PayoutsPage = () => {
   const { creator_id } = useParams();
   const [isDownloading, setIsDownloading] = useState(false);
+  const [alertDialog, setAlertDialog] = useState({ open: false, message: "", type: "info" });
 
   const handleDownloadCSV = async () => {
     if (!creator_id) {
-      alert("Creator ID is required");
+      setAlertDialog({ open: true, message: "Creator ID is required", type: "error" });
       return;
     }
 
@@ -61,7 +63,7 @@ const PayoutsPage = () => {
       document.body.removeChild(a);
     } catch (error) {
       console.error("Error downloading CSV:", error);
-      alert(`Error downloading CSV: ${error.message}`);
+      setAlertDialog({ open: true, message: `Error downloading CSV: ${error.message}`, type: "error" });
     } finally {
       setIsDownloading(false);
     }
@@ -84,6 +86,14 @@ const PayoutsPage = () => {
         <TipAmounts />
         <Tips />
       </div>
+
+      {/* Alert Dialog */}
+      <AlertDialog
+        open={alertDialog.open}
+        onOpenChange={(open) => setAlertDialog({ ...alertDialog, open })}
+        message={alertDialog.message}
+        type={alertDialog.type}
+      />
     </div>
   );
 };

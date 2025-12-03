@@ -34,7 +34,8 @@ import {
   UserCheck,
   Search,
   Filter,
-  X
+  X,
+  Clock
 } from "lucide-react";
 
 async function getCreators(token) {
@@ -62,7 +63,6 @@ const CreatorsPage = () => {
   // Filter states
   const [approvedFilter, setApprovedFilter] = useState("all");
   const [onboardingFilter, setOnboardingFilter] = useState("all");
-  const [verifiedFilter, setVerifiedFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -114,10 +114,6 @@ const CreatorsPage = () => {
       if (onboardingFilter === "completed" && !creator.onboarding?.completed) return false;
       if (onboardingFilter === "incomplete" && creator.onboarding?.completed) return false;
 
-      // Verified filter
-      if (verifiedFilter === "verified" && !creator.verified) return false;
-      if (verifiedFilter === "notVerified" && creator.verified) return false;
-
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -134,7 +130,7 @@ const CreatorsPage = () => {
 
       return true;
     });
-  }, [creators, approvedFilter, onboardingFilter, verifiedFilter, searchQuery]);
+  }, [creators, approvedFilter, onboardingFilter, searchQuery]);
 
   const getStatusBadge = (verified, approved) => {
     if (approved && verified) {
@@ -170,13 +166,11 @@ const CreatorsPage = () => {
   const clearFilters = () => {
     setApprovedFilter("all");
     setOnboardingFilter("all");
-    setVerifiedFilter("all");
     setSearchQuery("");
   };
 
   const hasActiveFilters = approvedFilter !== "all" || 
     onboardingFilter !== "all" || 
-    verifiedFilter !== "all" || 
     searchQuery !== "";
 
   if (loading) {
@@ -290,18 +284,6 @@ const CreatorsPage = () => {
                 <SelectItem value="incomplete">Incomplete</SelectItem>
               </SelectContent>
             </Select>
-
-            {/* Verified Filter */}
-            <Select value={verifiedFilter} onValueChange={setVerifiedFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Verification Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Verification Status</SelectItem>
-                <SelectItem value="verified">Verified</SelectItem>
-                <SelectItem value="notVerified">Not Verified</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </CardContent>
       </Card>
@@ -347,11 +329,13 @@ const CreatorsPage = () => {
                       <TableCell>{getStatusBadge(creator.verified, creator.approved)}</TableCell>
                       <TableCell>
                         {creator.onboarding?.completed ? (
-                          <Badge variant="default" className="bg-green-100 text-green-800 border-green-200">
+                          <Badge variant="default" className="bg-green-500 text-white border border-green-600 rounded-md px-2 py-1">
+                            <CheckCircle2 className="w-3 h-3 mr-1.5" />
                             Completed
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="bg-orange-50 text-orange-800 border-orange-200">
+                          <Badge className="bg-blue-500 text-blue-200 border border-black rounded-md px-2 py-1">
+                            <Clock className="w-3 h-3 mr-1.5" />
                             In Progress
                           </Badge>
                         )}

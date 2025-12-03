@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -28,6 +28,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuthStore } from "@/stores/authStore";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import AlertDialog from "@/components/AlertDialog";
 import {
   Bell,
   Plus,
@@ -40,18 +42,8 @@ import {
   Info,
   XCircle,
   Trash2,
+  Search,
 } from "lucide-react";
-
-// Simple notification helper
-const showNotification = (message, type = "info") => {
-  if (type === "error") {
-    alert(`Error: ${message}`);
-  } else if (type === "success") {
-    alert(`Success: ${message}`);
-  } else {
-    alert(message);
-  }
-};
 
 const NotificationsPage = () => {
   const { token } = useAuthStore();
@@ -61,6 +53,11 @@ const NotificationsPage = () => {
   const [loadingCreators, setLoadingCreators] = useState(false);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [creatorSearchQuery, setCreatorSearchQuery] = useState("");
+  const [isCreatorDropdownOpen, setIsCreatorDropdownOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [notificationToDelete, setNotificationToDelete] = useState(null);
+  const [alertDialog, setAlertDialog] = useState({ open: false, message: "", type: "info" });
   const [formData, setFormData] = useState({
     title: "",
     message: "",
@@ -68,6 +65,11 @@ const NotificationsPage = () => {
     recipientType: "all", // "all" or "specific"
     creatorId: "",
   });
+
+  // Notification helper
+  const showNotification = (message, type = "info") => {
+    setAlertDialog({ open: true, message, type });
+  };
 
   // Fetch all notifications
   const fetchNotifications = async () => {
@@ -160,6 +162,29 @@ const NotificationsPage = () => {
     }
   }, [token]);
 
+  // Filter creators based on search query
+  const filteredCreators = useMemo(() => {
+    if (!creatorSearchQuery.trim()) {
+      return creators;
+    }
+    
+    const query = creatorSearchQuery.toLowerCase();
+    return creators.filter((creator) => {
+      const username = creator.username?.toLowerCase() || "";
+      const email = creator.email?.toLowerCase() || "";
+      const firstName = creator.firstName?.toLowerCase() || "";
+      const lastName = creator.lastName?.toLowerCase() || "";
+      
+      return (
+        username.includes(query) ||
+        email.includes(query) ||
+        firstName.includes(query) ||
+        lastName.includes(query) ||
+        `${firstName} ${lastName}`.trim().includes(query)
+      );
+    });
+  }, [creators, creatorSearchQuery]);
+
   // Create a new notification
   const handleCreateNotification = async (e) => {
     e.preventDefault();
@@ -219,6 +244,8 @@ const NotificationsPage = () => {
           recipientType: "all",
           creatorId: "",
         });
+        setCreatorSearchQuery("");
+        setIsCreatorDropdownOpen(false);
         fetchNotifications(); // Refresh the list
       }
     } catch (error) {
@@ -233,14 +260,17 @@ const NotificationsPage = () => {
   };
 
   // Delete a notification
-  const handleDeleteNotification = async (notificationId) => {
-    if (!confirm("Are you sure you want to delete this notification?")) {
-      return;
-    }
+  const handleDeleteClick = (notificationId) => {
+    setNotificationToDelete(notificationId);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!notificationToDelete) return;
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/notification/${notificationId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/notification/${notificationToDelete}`,
         {
           method: "DELETE",
           headers: {
@@ -266,6 +296,9 @@ const NotificationsPage = () => {
         `Failed to delete notification: ${error.message || "Please try again later"}`,
         "error"
       );
+    } finally {
+      setDeleteConfirmOpen(false);
+      setNotificationToDelete(null);
     }
   };
 
@@ -276,25 +309,29 @@ const NotificationsPage = () => {
         icon: Info,
         color: "bg-blue-500",
         text: "Info",
-        textColor: "text-blue-900",
+        textColor: "text-white",
+        borderColor: "border-blue-600",
       },
       success: {
         icon: CheckCircle2,
         color: "bg-green-500",
         text: "Success",
-        textColor: "text-green-900",
+        textColor: "text-white",
+        borderColor: "border-green-600",
       },
       warning: {
         icon: AlertCircle,
         color: "bg-yellow-500",
         text: "Warning",
-        textColor: "text-yellow-900",
+        textColor: "text-white",
+        borderColor: "border-yellow-600",
       },
       error: {
         icon: XCircle,
         color: "bg-red-500",
         text: "Error",
-        textColor: "text-red-900",
+        textColor: "text-white",
+        borderColor: "border-red-600",
       },
     };
 
@@ -303,9 +340,9 @@ const NotificationsPage = () => {
 
     return (
       <Badge
-        className={`${config.color} ${config.textColor} border-2 border-black`}
+        className={`${config.color} ${config.textColor} border ${config.borderColor} rounded-md px-2 py-1`}
       >
-        <Icon className="w-3 h-3 mr-1" />
+        <Icon className="w-3 h-3 mr-1.5" />
         {config.text}
       </Badge>
     );
@@ -362,9 +399,11 @@ const NotificationsPage = () => {
                 <Label htmlFor="recipientType">Recipient *</Label>
                 <Select
                   value={formData.recipientType}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, recipientType: value, creatorId: "" })
-                  }
+                  onValueChange={(value) => {
+                    setFormData({ ...formData, recipientType: value, creatorId: "" });
+                    setCreatorSearchQuery("");
+                    setIsCreatorDropdownOpen(false);
+                  }}
                 >
                   <SelectTrigger id="recipientType">
                     <SelectValue placeholder="Select recipient type" />
@@ -390,42 +429,102 @@ const NotificationsPage = () => {
               {formData.recipientType === "specific" && (
                 <div className="space-y-2">
                   <Label htmlFor="creatorId">Select Creator *</Label>
-                  <Select
-                    value={formData.creatorId}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, creatorId: value })
-                    }
-                    disabled={loadingCreators}
-                  >
-                    <SelectTrigger id="creatorId">
-                      <SelectValue placeholder={loadingCreators ? "Loading creators..." : "Select a creator"} />
-                    </SelectTrigger>
-                    <SelectContent>
+                  <div className="relative">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      id="creatorId"
+                      onClick={() => setIsCreatorDropdownOpen(!isCreatorDropdownOpen)}
+                      disabled={loadingCreators}
+                      className="w-full justify-between"
+                    >
                       {loadingCreators ? (
-                        <div className="p-4 text-center text-sm text-muted-foreground">
-                          <Loader2 className="w-4 h-4 animate-spin mx-auto mb-2" />
-                          Loading creators...
-                        </div>
-                      ) : creators.length === 0 ? (
-                        <div className="p-4 text-center text-sm text-muted-foreground">
-                          No creators found
-                        </div>
+                        "Loading creators..."
+                      ) : formData.creatorId ? (
+                        (() => {
+                          const selected = creators.find(c => c._id === formData.creatorId);
+                          return selected ? `@${selected.username}` : "Select a creator";
+                        })()
                       ) : (
-                        creators.map((creator) => (
-                          <SelectItem key={creator._id} value={creator._id}>
-                            <div>
-                              <div className="font-medium">
-                                @{creator.username}
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {creator.email}
-                              </div>
-                            </div>
-                          </SelectItem>
-                        ))
+                        "Select a creator"
                       )}
-                    </SelectContent>
-                  </Select>
+                      <svg
+                        className={`ml-2 h-4 w-4 transition-transform ${isCreatorDropdownOpen ? "rotate-180" : ""}`}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </Button>
+                    
+                    {isCreatorDropdownOpen && (
+                      <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] flex flex-col">
+                        {/* Search Input inside dropdown */}
+                        <div className="p-2 border-b">
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                              placeholder="Search creators..."
+                              value={creatorSearchQuery}
+                              onChange={(e) => setCreatorSearchQuery(e.target.value)}
+                              className="pl-9"
+                              autoFocus
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Creators List */}
+                        <div className="overflow-y-auto flex-1">
+                          {loadingCreators ? (
+                            <div className="p-4 text-center text-sm text-muted-foreground">
+                              <Loader2 className="w-4 h-4 animate-spin mx-auto mb-2" />
+                              Loading creators...
+                            </div>
+                          ) : filteredCreators.length === 0 ? (
+                            <div className="p-4 text-center text-sm text-muted-foreground">
+                              {creatorSearchQuery ? "No creators found matching your search" : "No creators found"}
+                            </div>
+                          ) : (
+                            filteredCreators.map((creator) => (
+                              <div
+                                key={creator._id}
+                                onClick={() => {
+                                  setFormData({ ...formData, creatorId: creator._id });
+                                  setIsCreatorDropdownOpen(false);
+                                  setCreatorSearchQuery("");
+                                }}
+                                className={`px-4 py-3 cursor-pointer hover:bg-gray-100 transition-colors ${
+                                  formData.creatorId === creator._id ? "bg-gray-50" : ""
+                                }`}
+                              >
+                                <div className="font-medium">
+                                  @{creator.username}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {creator.email}
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Click outside to close */}
+                  {isCreatorDropdownOpen && (
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setIsCreatorDropdownOpen(false)}
+                    />
+                  )}
+                  
                   {loadingCreators && (
                     <p className="text-xs text-muted-foreground">
                       Loading creators...
@@ -434,6 +533,11 @@ const NotificationsPage = () => {
                   {!loadingCreators && creators.length === 0 && (
                     <p className="text-xs text-muted-foreground">
                       No creators available. Make sure creators are registered.
+                    </p>
+                  )}
+                  {!loadingCreators && creators.length > 0 && creatorSearchQuery && (
+                    <p className="text-xs text-muted-foreground">
+                      Showing {filteredCreators.length} of {creators.length} creators
                     </p>
                   )}
                 </div>
@@ -589,7 +693,7 @@ const NotificationsPage = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleDeleteNotification(notification._id)}
+                      onClick={() => handleDeleteClick(notification._id)}
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
                       Delete
@@ -601,6 +705,26 @@ const NotificationsPage = () => {
           </Table>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Notification"
+        description="Are you sure you want to delete this notification? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+      />
+
+      {/* Alert Dialog */}
+      <AlertDialog
+        open={alertDialog.open}
+        onOpenChange={(open) => setAlertDialog({ ...alertDialog, open })}
+        message={alertDialog.message}
+        type={alertDialog.type}
+      />
     </div>
   );
 };

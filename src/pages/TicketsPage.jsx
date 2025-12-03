@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuthStore } from "@/stores/authStore";
+import AlertDialog from "@/components/AlertDialog";
 import {
   MessageSquare,
   Edit,
@@ -38,16 +39,6 @@ import {
   CheckCircle2,
   XCircle,
 } from "lucide-react";
-// Simple notification helper
-const showNotification = (message, type = "info") => {
-  if (type === "error") {
-    alert(`Error: ${message}`);
-  } else if (type === "success") {
-    alert(`Success: ${message}`);
-  } else {
-    alert(message);
-  }
-};
 
 const TicketsPage = () => {
   const { token } = useAuthStore();
@@ -56,11 +47,17 @@ const TicketsPage = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [alertDialog, setAlertDialog] = useState({ open: false, message: "", type: "info" });
   const [editFormData, setEditFormData] = useState({
     status: "",
     solution_description: "",
   });
   const [statusFilter, setStatusFilter] = useState("all");
+
+  // Notification helper
+  const showNotification = (message, type = "info") => {
+    setAlertDialog({ open: true, message, type });
+  };
 
   // Fetch all tickets
   const fetchTickets = async () => {
@@ -166,25 +163,29 @@ const TicketsPage = () => {
         icon: AlertCircle,
         color: "bg-yellow-500",
         text: "Open",
-        textColor: "text-yellow-900",
+        textColor: "text-white",
+        borderColor: "border-yellow-600",
       },
       in_progress: {
         icon: Clock,
         color: "bg-blue-500",
         text: "In Progress",
-        textColor: "text-blue-900",
+        textColor: "text-blue-200",
+        borderColor: "border-black",
       },
       resolved: {
         icon: CheckCircle2,
         color: "bg-green-500",
         text: "Resolved",
-        textColor: "text-green-900",
+        textColor: "text-white",
+        borderColor: "border-green-600",
       },
       closed: {
         icon: XCircle,
         color: "bg-gray-500",
         text: "Closed",
-        textColor: "text-gray-900",
+        textColor: "text-white",
+        borderColor: "border-gray-600",
       },
     };
 
@@ -193,9 +194,9 @@ const TicketsPage = () => {
 
     return (
       <Badge
-        className={`${config.color} ${config.textColor} border-2 border-black`}
+        className={`${config.color} ${config.textColor} border ${config.borderColor} rounded-md px-2 py-1`}
       >
-        <Icon className="w-3 h-3 mr-1" />
+        <Icon className="w-3 h-3 mr-1.5" />
         {config.text}
       </Badge>
     );
@@ -449,6 +450,14 @@ const TicketsPage = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Alert Dialog */}
+      <AlertDialog
+        open={alertDialog.open}
+        onOpenChange={(open) => setAlertDialog({ ...alertDialog, open })}
+        message={alertDialog.message}
+        type={alertDialog.type}
+      />
     </div>
   );
 };
