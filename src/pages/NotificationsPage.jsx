@@ -340,7 +340,7 @@ const NotificationsPage = () => {
 
     return (
       <Badge
-        className={`${config.color} ${config.textColor} border ${config.borderColor} rounded-md px-2 py-1`}
+        className={`${config.color} ${config.textColor} border ${config.borderColor} rounded-md px-2 py-1 font-black`}
       >
         <Icon className="w-3 h-3 mr-1.5" />
         {config.text}
@@ -374,29 +374,29 @@ const NotificationsPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Notifications</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-3xl font-black text-black uppercase tracking-tight">Notifications</h1>
+          <p className="text-black/60 font-bold mt-1 text-sm">
             Send and manage notifications to creators
           </p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="bg-black hover:bg-black/90 text-white font-black border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
               <Plus className="w-4 h-4 mr-2" />
               Send Notification
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Send Notification</DialogTitle>
-              <DialogDescription>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-[4px] border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <DialogHeader className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black -mx-8 -mt-8 px-8 pt-6 pb-4 mb-6">
+              <DialogTitle className="text-white font-black uppercase tracking-tight text-2xl">Send Notification</DialogTitle>
+              <DialogDescription className="text-[#FEF18C] font-bold mt-2">
                 Send a notification to all creators or a specific creator
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleCreateNotification} className="space-y-4 mt-4">
               {/* Recipient Type */}
               <div className="space-y-2">
-                <Label htmlFor="recipientType">Recipient *</Label>
+                <Label htmlFor="recipientType" className="font-black text-black uppercase tracking-tight">Recipient *</Label>
                 <Select
                   value={formData.recipientType}
                   onValueChange={(value) => {
@@ -405,10 +405,10 @@ const NotificationsPage = () => {
                     setIsCreatorDropdownOpen(false);
                   }}
                 >
-                  <SelectTrigger id="recipientType">
+                  <SelectTrigger id="recipientType" className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
                     <SelectValue placeholder="Select recipient type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                     <SelectItem value="all">
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4" />
@@ -428,7 +428,7 @@ const NotificationsPage = () => {
               {/* Creator Selection (if specific) */}
               {formData.recipientType === "specific" && (
                 <div className="space-y-2">
-                  <Label htmlFor="creatorId">Select Creator *</Label>
+                  <Label htmlFor="creatorId" className="font-black text-black uppercase tracking-tight">Select Creator *</Label>
                   <div className="relative">
                     <Button
                       type="button"
@@ -436,7 +436,7 @@ const NotificationsPage = () => {
                       id="creatorId"
                       onClick={() => setIsCreatorDropdownOpen(!isCreatorDropdownOpen)}
                       disabled={loadingCreators}
-                      className="w-full justify-between"
+                      className="w-full justify-between bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-[#FEF18C] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
                     >
                       {loadingCreators ? (
                         "Loading creators..."
@@ -463,16 +463,16 @@ const NotificationsPage = () => {
                     </Button>
                     
                     {isCreatorDropdownOpen && (
-                      <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] flex flex-col">
+                      <div className="absolute z-50 w-full mt-1 bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-h-[300px] flex flex-col">
                         {/* Search Input inside dropdown */}
-                        <div className="p-2 border-b">
+                        <div className="p-2 border-b-[2px] border-black">
                           <div className="relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-black z-10" />
                             <Input
                               placeholder="Search creators..."
                               value={creatorSearchQuery}
                               onChange={(e) => setCreatorSearchQuery(e.target.value)}
-                              className="pl-9"
+                              className="pl-9 bg-white border-[3px] border-black focus:border-[#828BF8] focus:ring-0 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-none font-bold"
                               autoFocus
                               onClick={(e) => e.stopPropagation()}
                             />
@@ -482,12 +482,12 @@ const NotificationsPage = () => {
                         {/* Creators List */}
                         <div className="overflow-y-auto flex-1">
                           {loadingCreators ? (
-                            <div className="p-4 text-center text-sm text-muted-foreground">
-                              <Loader2 className="w-4 h-4 animate-spin mx-auto mb-2" />
+                            <div className="p-4 text-center text-sm text-black/60 font-bold">
+                              <Loader2 className="w-4 h-4 animate-spin mx-auto mb-2 text-black" />
                               Loading creators...
                             </div>
                           ) : filteredCreators.length === 0 ? (
-                            <div className="p-4 text-center text-sm text-muted-foreground">
+                            <div className="p-4 text-center text-sm text-black/60 font-bold">
                               {creatorSearchQuery ? "No creators found matching your search" : "No creators found"}
                             </div>
                           ) : (
@@ -499,14 +499,14 @@ const NotificationsPage = () => {
                                   setIsCreatorDropdownOpen(false);
                                   setCreatorSearchQuery("");
                                 }}
-                                className={`px-4 py-3 cursor-pointer hover:bg-gray-100 transition-colors ${
-                                  formData.creatorId === creator._id ? "bg-gray-50" : ""
+                                className={`px-4 py-3 cursor-pointer hover:bg-[#FEF18C]/30 transition-colors border-b-[1px] border-black/10 ${
+                                  formData.creatorId === creator._id ? "bg-[#FEF18C]/20" : ""
                                 }`}
                               >
-                                <div className="font-medium">
+                                <div className="font-black text-black">
                                   @{creator.username}
                                 </div>
-                                <div className="text-xs text-muted-foreground">
+                                <div className="text-xs text-black/60 font-bold">
                                   {creator.email}
                                 </div>
                               </div>
@@ -545,17 +545,17 @@ const NotificationsPage = () => {
 
               {/* Type */}
               <div className="space-y-2">
-                <Label htmlFor="type">Type *</Label>
+                <Label htmlFor="type" className="font-black text-black uppercase tracking-tight">Type *</Label>
                 <Select
                   value={formData.type}
                   onValueChange={(value) =>
                     setFormData({ ...formData, type: value })
                   }
                 >
-                  <SelectTrigger id="type">
+                  <SelectTrigger id="type" className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                     <SelectItem value="info">Info</SelectItem>
                     <SelectItem value="success">Success</SelectItem>
                     <SelectItem value="warning">Warning</SelectItem>
@@ -566,7 +566,7 @@ const NotificationsPage = () => {
 
               {/* Title */}
               <div className="space-y-2">
-                <Label htmlFor="title">Title *</Label>
+                <Label htmlFor="title" className="font-black text-black uppercase tracking-tight">Title *</Label>
                 <Input
                   id="title"
                   value={formData.title}
@@ -575,12 +575,13 @@ const NotificationsPage = () => {
                   }
                   placeholder="Enter notification title"
                   maxLength={200}
+                  className="bg-white border-[2px] border-black focus:border-[#828BF8] focus:ring-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 />
               </div>
 
               {/* Message */}
               <div className="space-y-2">
-                <Label htmlFor="message">Message *</Label>
+                <Label htmlFor="message" className="font-black text-black uppercase tracking-tight">Message *</Label>
                 <Textarea
                   id="message"
                   value={formData.message}
@@ -588,7 +589,7 @@ const NotificationsPage = () => {
                     setFormData({ ...formData, message: e.target.value })
                   }
                   placeholder="Enter notification message"
-                  className="min-h-[150px]"
+                  className="min-h-[150px] bg-white border-[2px] border-black focus:border-[#828BF8] focus:ring-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 />
               </div>
 
@@ -599,10 +600,15 @@ const NotificationsPage = () => {
                   variant="outline"
                   onClick={() => setIsCreateDialogOpen(false)}
                   disabled={isSubmitting}
+                  className="bg-white hover:bg-[#FEF18C] text-black font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmitting}>
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-[#828BF8] to-[#5C66D4] hover:from-[#828BF8]/90 hover:to-[#5C66D4]/90 text-white font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -623,86 +629,102 @@ const NotificationsPage = () => {
 
       {/* Notifications Table */}
       {notifications.length === 0 ? (
-        <div className="border rounded-lg p-12 text-center">
-          <Bell className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-          <h3 className="text-xl font-semibold mb-2">No Notifications Found</h3>
-          <p className="text-muted-foreground">
+        <div className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg p-12 text-center">
+          <div className="h-20 w-20 bg-gradient-to-br from-[#828BF8] to-[#5C66D4] border-[4px] border-black rounded-lg flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mx-auto mb-4">
+            <Bell className="w-10 h-10 text-white" />
+          </div>
+          <h3 className="text-xl font-black text-black mb-2 uppercase">No Notifications Found</h3>
+          <p className="text-black/60 font-bold">
             No notifications have been sent yet
           </p>
         </div>
       ) : (
-        <div className="border rounded-lg">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead>Message</TableHead>
-                <TableHead>Recipient</TableHead>
-                <TableHead>Sent By</TableHead>
-                <TableHead>Sent At</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {notifications.map((notification) => (
-                <TableRow key={notification._id}>
-                  <TableCell>{getTypeBadge(notification.type)}</TableCell>
-                  <TableCell className="font-medium max-w-[200px]">
-                    <div className="truncate" title={notification.title}>
-                      {notification.title}
-                    </div>
-                  </TableCell>
-                  <TableCell className="max-w-[300px]">
-                    <div className="text-sm text-muted-foreground truncate" title={notification.message}>
-                      {notification.message}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {notification.creator ? (
-                      <div>
-                        <div className="font-medium">
-                          @{notification.creator?.username || "N/A"}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {notification.creator?.email || "N/A"}
-                        </div>
-                      </div>
-                    ) : (
-                      <Badge variant="outline">All Creators</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {notification.sentBy ? (
-                      <div>
-                        <div className="font-medium">
-                          @{notification.sentBy?.username || "N/A"}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {notification.sentBy?.email || "N/A"}
-                        </div>
-                      </div>
-                    ) : (
-                      "N/A"
-                    )}
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {formatDate(notification.createdAt)}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteClick(notification._id)}
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete
-                    </Button>
-                  </TableCell>
+        <div className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <div className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black px-6 py-4">
+            <h2 className="text-white font-black uppercase tracking-tight text-lg">Notifications</h2>
+            <p className="text-[#FEF18C] font-bold text-xs mt-1">
+              {notifications.length} notification{notifications.length !== 1 ? 's' : ''} found
+            </p>
+          </div>
+          <div className="border-t-[3px] border-black">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#FEF18C]/20 border-b-[2px] border-black">
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Type</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Title</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Message</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Recipient</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Sent By</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Sent At</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {notifications.map((notification, index) => (
+                  <TableRow 
+                    key={notification._id}
+                    className={`border-b-[2px] border-black hover:bg-[#FEF18C]/10 transition-colors ${
+                      index % 2 === 0 ? 'bg-white' : 'bg-[#FEF18C]/5'
+                    }`}
+                  >
+                    <TableCell className="border-r-[2px] border-black">{getTypeBadge(notification.type)}</TableCell>
+                    <TableCell className="font-black text-black max-w-[200px] border-r-[2px] border-black">
+                      <div className="truncate" title={notification.title}>
+                        {notification.title}
+                      </div>
+                    </TableCell>
+                    <TableCell className="max-w-[300px] border-r-[2px] border-black">
+                      <div className="text-sm text-black/60 truncate font-bold" title={notification.message}>
+                        {notification.message}
+                      </div>
+                    </TableCell>
+                    <TableCell className="border-r-[2px] border-black">
+                      {notification.creator ? (
+                        <div>
+                          <div className="font-black text-black">
+                            @{notification.creator?.username || "N/A"}
+                          </div>
+                          <div className="text-xs text-black/60 font-bold">
+                            {notification.creator?.email || "N/A"}
+                          </div>
+                        </div>
+                      ) : (
+                        <Badge className="bg-[#828BF8] text-white border border-[#5C66D4] rounded-md px-2 py-1 font-black">All Creators</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="border-r-[2px] border-black">
+                      {notification.sentBy ? (
+                        <div>
+                          <div className="font-black text-black">
+                            @{notification.sentBy?.username || "N/A"}
+                          </div>
+                          <div className="text-xs text-black/60 font-bold">
+                            {notification.sentBy?.email || "N/A"}
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-black/60 font-bold">N/A</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-sm text-black font-bold border-r-[2px] border-black">
+                      {formatDate(notification.createdAt)}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteClick(notification._id)}
+                        className="bg-white hover:bg-red-500 hover:text-white text-black font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       )}
 

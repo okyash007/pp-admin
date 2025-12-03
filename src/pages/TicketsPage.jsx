@@ -234,17 +234,17 @@ const TicketsPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Support Tickets</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-3xl font-black text-black uppercase tracking-tight">Support Tickets</h1>
+          <p className="text-black/60 font-bold mt-1 text-sm">
             Manage and respond to support tickets
           </p>
         </div>
         <div className="flex items-center gap-4">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="">
+            <SelectTrigger className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8] font-black">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <SelectItem value="all">All Tickets</SelectItem>
               <SelectItem value="open">Open</SelectItem>
               <SelectItem value="in_progress">In Progress</SelectItem>
@@ -257,121 +257,137 @@ const TicketsPage = () => {
 
       {/* Tickets Table */}
       {filteredTickets.length === 0 ? (
-        <div className="border rounded-lg p-12 text-center">
-          <MessageSquare className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-          <h3 className="text-xl font-semibold mb-2">No Tickets Found</h3>
-          <p className="text-muted-foreground">
+        <div className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg p-12 text-center">
+          <div className="h-20 w-20 bg-gradient-to-br from-[#828BF8] to-[#5C66D4] border-[4px] border-black rounded-lg flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mx-auto mb-4">
+            <MessageSquare className="w-10 h-10 text-white" />
+          </div>
+          <h3 className="text-xl font-black text-black mb-2 uppercase">No Tickets Found</h3>
+          <p className="text-black/60 font-bold">
             {statusFilter === "all"
               ? "No tickets have been created yet"
               : `No tickets with status "${statusFilter}"`}
           </p>
         </div>
       ) : (
-        <div className="border rounded-lg">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Creator</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Last Updated</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredTickets.map((ticket) => (
-                <TableRow key={ticket._id}>
-                  <TableCell className="font-medium max-w-[300px]">
-                    <div className="truncate" title={ticket.title}>
-                      {ticket.title}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1 line-clamp-1">
-                      {ticket.description}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {ticket.creator?.username ? (
-                      <div>
-                        <div className="font-medium">
-                          @{ticket.creator.username}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {ticket.creator.email}
-                        </div>
-                      </div>
-                    ) : (
-                      "N/A"
-                    )}
-                  </TableCell>
-                  <TableCell>{getStatusBadge(ticket.status)}</TableCell>
-                  <TableCell className="text-sm">
-                    {formatDate(ticket.createdAt)}
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {formatDate(ticket.updatedAt)}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openEditDialog(ticket)}
-                    >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit
-                    </Button>
-                  </TableCell>
+        <div className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <div className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black px-6 py-4">
+            <h2 className="text-white font-black uppercase tracking-tight text-lg">Support Tickets</h2>
+            <p className="text-[#FEF18C] font-bold text-xs mt-1">
+              {filteredTickets.length} ticket{filteredTickets.length !== 1 ? 's' : ''} found
+            </p>
+          </div>
+          <div className="border-t-[3px] border-black">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#FEF18C]/20 border-b-[2px] border-black">
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Title</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Creator</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Status</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Created</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Last Updated</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredTickets.map((ticket, index) => (
+                  <TableRow 
+                    key={ticket._id}
+                    className={`border-b-[2px] border-black hover:bg-[#FEF18C]/10 transition-colors ${
+                      index % 2 === 0 ? 'bg-white' : 'bg-[#FEF18C]/5'
+                    }`}
+                  >
+                    <TableCell className="font-black text-black max-w-[300px] border-r-[2px] border-black">
+                      <div className="truncate" title={ticket.title}>
+                        {ticket.title}
+                      </div>
+                      <div className="text-xs text-black/60 mt-1 line-clamp-1 font-bold">
+                        {ticket.description}
+                      </div>
+                    </TableCell>
+                    <TableCell className="border-r-[2px] border-black">
+                      {ticket.creator?.username ? (
+                        <div>
+                          <div className="font-black text-black">
+                            @{ticket.creator.username}
+                          </div>
+                          <div className="text-xs text-black/60 font-bold">
+                            {ticket.creator.email}
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-black/60 font-bold">N/A</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="border-r-[2px] border-black">{getStatusBadge(ticket.status)}</TableCell>
+                    <TableCell className="text-sm text-black font-bold border-r-[2px] border-black">
+                      {formatDate(ticket.createdAt)}
+                    </TableCell>
+                    <TableCell className="text-sm text-black font-bold border-r-[2px] border-black">
+                      {formatDate(ticket.updatedAt)}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditDialog(ticket)}
+                        className="bg-white hover:bg-[#828BF8] hover:text-white text-black font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                      >
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       )}
 
       {/* Edit Ticket Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Ticket</DialogTitle>
-            <DialogDescription>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white border-[4px] border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+          <DialogHeader className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black -mx-8 -mt-8 px-8 pt-6 pb-4 mb-6">
+            <DialogTitle className="text-white font-black uppercase tracking-tight text-2xl">Edit Ticket</DialogTitle>
+            <DialogDescription className="text-[#FEF18C] font-bold mt-2">
               Update ticket status and add solution description
             </DialogDescription>
           </DialogHeader>
           {selectedTicket && (
             <form onSubmit={handleUpdateTicket} className="space-y-6 mt-4">
               {/* Ticket Info */}
-              <div className="space-y-4 p-4 bg-muted rounded-lg">
+              <div className="space-y-4 p-4 bg-[#FEF18C]/10 border-[3px] border-black rounded-lg">
                 <div>
-                  <Label className="text-sm font-semibold text-muted-foreground">
+                  <Label className="text-sm font-black text-black uppercase tracking-tight">
                     Title
                   </Label>
-                  <p className="text-lg font-semibold mt-1">
+                  <p className="text-lg font-black text-black mt-1">
                     {selectedTicket.title}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-semibold text-muted-foreground">
+                  <Label className="text-sm font-black text-black uppercase tracking-tight">
                     Description
                   </Label>
-                  <p className="text-sm mt-1 whitespace-pre-wrap">
+                  <p className="text-sm mt-1 whitespace-pre-wrap text-black font-bold">
                     {selectedTicket.description}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-semibold text-muted-foreground">
+                  <Label className="text-sm font-black text-black uppercase tracking-tight">
                     Creator
                   </Label>
-                  <p className="text-sm mt-1">
+                  <p className="text-sm mt-1 text-black font-bold">
                     {selectedTicket.creator?.username
                       ? `@${selectedTicket.creator.username} (${selectedTicket.creator.email})`
                       : "N/A"}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-semibold text-muted-foreground">
+                  <Label className="text-sm font-black text-black uppercase tracking-tight">
                     Created
                   </Label>
-                  <p className="text-sm mt-1">
+                  <p className="text-sm mt-1 text-black font-bold">
                     {formatDate(selectedTicket.createdAt)}
                   </p>
                 </div>
@@ -379,17 +395,17 @@ const TicketsPage = () => {
 
               {/* Status Select */}
               <div className="space-y-2">
-                <Label htmlFor="status">Status *</Label>
+                <Label htmlFor="status" className="font-black text-black uppercase tracking-tight">Status *</Label>
                 <Select
                   value={editFormData.status}
                   onValueChange={(value) =>
                     setEditFormData({ ...editFormData, status: value })
                   }
                 >
-                  <SelectTrigger id="status">
+                  <SelectTrigger id="status" className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                     <SelectItem value="open">Open</SelectItem>
                     <SelectItem value="in_progress">In Progress</SelectItem>
                     <SelectItem value="resolved">Resolved</SelectItem>
@@ -400,7 +416,7 @@ const TicketsPage = () => {
 
               {/* Solution Description */}
               <div className="space-y-2">
-                <Label htmlFor="solution_description">
+                <Label htmlFor="solution_description" className="font-black text-black uppercase tracking-tight">
                   Solution Description
                 </Label>
                 <Textarea
@@ -413,9 +429,9 @@ const TicketsPage = () => {
                     })
                   }
                   placeholder="Enter the solution or response to this ticket..."
-                  className="min-h-[200px]"
+                  className="min-h-[200px] bg-white border-[2px] border-black focus:border-[#828BF8] focus:ring-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-black/60 font-bold">
                   Provide a detailed solution or response to help resolve this
                   ticket
                 </p>
@@ -428,11 +444,16 @@ const TicketsPage = () => {
                   variant="outline"
                   onClick={() => setIsEditDialogOpen(false)}
                   disabled={isSubmitting}
+                  className="bg-white hover:bg-[#FEF18C] text-black font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
                 >
                   <X className="w-4 h-4 mr-2" />
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmitting}>
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-[#828BF8] to-[#5C66D4] hover:from-[#828BF8]/90 hover:to-[#5C66D4]/90 text-white font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />

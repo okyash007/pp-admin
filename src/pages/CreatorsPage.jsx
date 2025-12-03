@@ -134,13 +134,13 @@ const CreatorsPage = () => {
 
   const getStatusBadge = (verified, approved) => {
     if (approved && verified) {
-      return <Badge variant="default" className="bg-green-100 text-green-800 border-green-200">Verified & Approved</Badge>;
+      return <Badge className="bg-green-500 text-white border border-green-600 rounded-md px-2 py-1 font-black">Verified & Approved</Badge>;
     } else if (approved) {
-      return <Badge variant="default" className="bg-blue-100 text-blue-800 border-blue-200">Approved</Badge>;
+      return <Badge className="bg-blue-500 text-white border border-blue-600 rounded-md px-2 py-1 font-black">Approved</Badge>;
     } else if (verified) {
-      return <Badge variant="default" className="bg-yellow-100 text-yellow-800 border-yellow-200">Verified</Badge>;
+      return <Badge className="bg-yellow-500 text-white border border-yellow-600 rounded-md px-2 py-1 font-black">Verified</Badge>;
     } else {
-      return <Badge variant="destructive">Pending</Badge>;
+      return <Badge className="bg-red-500 text-white border border-red-600 rounded-md px-2 py-1 font-black">Pending</Badge>;
     }
   };
 
@@ -178,32 +178,32 @@ const CreatorsPage = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Creators Management</h1>
-      </div>
-
+    <div className="space-y-6">
       {/* Analytics Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+        <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Creators</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-black text-black uppercase tracking-tight">Total Creators</CardTitle>
+            <div className="h-10 w-10 bg-gradient-to-br from-[#828BF8] to-[#5C66D4] border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+              <Users className="h-5 w-5 text-white" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analytics.total}</div>
-            <p className="text-xs text-muted-foreground">All signed up users</p>
+            <div className="text-3xl font-black text-black">{analytics.total}</div>
+            <p className="text-xs font-bold text-black/60 mt-1">All signed up users</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Onboarding Completed</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-black text-black uppercase tracking-tight">Onboarding Completed</CardTitle>
+            <div className="h-10 w-10 bg-gradient-to-br from-[#AAD6B8] to-[#7FB896] border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+              <CheckCircle2 className="h-5 w-5 text-white" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analytics.onboardingCompleted}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-black text-black">{analytics.onboardingCompleted}</div>
+            <p className="text-xs font-bold text-black/60 mt-1">
               {analytics.total > 0 
                 ? `${Math.round((analytics.onboardingCompleted / analytics.total) * 100)}% completed`
                 : "0% completed"}
@@ -211,14 +211,16 @@ const CreatorsPage = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Approved Creators</CardTitle>
-            <UserCheck className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-black text-black uppercase tracking-tight">Approved Creators</CardTitle>
+            <div className="h-10 w-10 bg-gradient-to-br from-[#FEF18C] to-[#FEF18C]/80 border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+              <UserCheck className="h-5 w-5 text-black" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analytics.approved}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-black text-black">{analytics.approved}</div>
+            <p className="text-xs font-bold text-black/60 mt-1">
               {analytics.total > 0 
                 ? `${Math.round((analytics.approved / analytics.total) * 100)}% approved`
                 : "0% approved"}
@@ -228,19 +230,19 @@ const CreatorsPage = () => {
       </div>
 
       {/* Filters Section */}
-      <Card>
-        <CardHeader>
+      <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <CardHeader className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              <CardTitle>Filters</CardTitle>
+              <Filter className="h-5 w-5 text-white" />
+              <CardTitle className="text-white font-black uppercase tracking-tight">Filters</CardTitle>
             </div>
             {hasActiveFilters && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={clearFilters}
-                className="h-8"
+                className="h-8 bg-white hover:bg-[#FEF18C] text-black font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
               >
                 <X className="h-4 w-4 mr-2" />
                 Clear Filters
@@ -248,25 +250,25 @@ const CreatorsPage = () => {
             )}
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <CardContent className="p-6">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-black z-10" />
               <Input
                 placeholder="Search creators..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 bg-white border-[3px] border-black focus:border-[#828BF8] focus:ring-0 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-none font-bold"
               />
             </div>
 
             {/* Approved Filter */}
             <Select value={approvedFilter} onValueChange={setApprovedFilter}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
                 <SelectValue placeholder="Approval Status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <SelectItem value="all">All Approval Status</SelectItem>
                 <SelectItem value="approved">Approved</SelectItem>
                 <SelectItem value="notApproved">Not Approved</SelectItem>
@@ -275,10 +277,10 @@ const CreatorsPage = () => {
 
             {/* Onboarding Filter */}
             <Select value={onboardingFilter} onValueChange={setOnboardingFilter}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
                 <SelectValue placeholder="Onboarding Status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <SelectItem value="all">All Onboarding Status</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
                 <SelectItem value="incomplete">Incomplete</SelectItem>
@@ -289,45 +291,52 @@ const CreatorsPage = () => {
       </Card>
 
       {/* Creators Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Creators List</CardTitle>
-          <CardDescription>
-            Showing {filteredCreators.length} of {creators.length} creators
-          </CardDescription>
+      <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <CardHeader className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-white font-black uppercase tracking-tight">Creators List</CardTitle>
+            <CardDescription className="text-[#FEF18C] font-bold text-sm">
+              Showing {filteredCreators.length} of {creators.length} creators
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent>
-          <div className="border rounded-lg">
+        <CardContent className="p-0">
+          <div className="border-t-[3px] border-black">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Username</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Onboarding</TableHead>
-                  <TableHead>Actions</TableHead>
+                <TableRow className="bg-[#FEF18C]/20 border-b-[2px] border-black">
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Name</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Username</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Email</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Phone</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Status</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Onboarding</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredCreators.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-8 text-black/60 font-bold border-b-[2px] border-black">
                       No creators found matching the filters
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredCreators.map((creator) => (
-                    <TableRow key={creator.creator_id || creator._id}>
-                      <TableCell className="font-medium">
+                  filteredCreators.map((creator, index) => (
+                    <TableRow 
+                      key={creator.creator_id || creator._id}
+                      className={`border-b-[2px] border-black hover:bg-[#FEF18C]/10 transition-colors ${
+                        index % 2 === 0 ? 'bg-white' : 'bg-[#FEF18C]/5'
+                      }`}
+                    >
+                      <TableCell className="font-black text-black border-r-[2px] border-black">
                         {creator.firstName} {creator.lastName}
                       </TableCell>
-                      <TableCell>@{creator.username}</TableCell>
-                      <TableCell>{creator.email}</TableCell>
-                      <TableCell>{creator.phone || "N/A"}</TableCell>
-                      <TableCell>{getStatusBadge(creator.verified, creator.approved)}</TableCell>
-                      <TableCell>
+                      <TableCell className="font-bold text-black border-r-[2px] border-black">@{creator.username}</TableCell>
+                      <TableCell className="text-black border-r-[2px] border-black">{creator.email}</TableCell>
+                      <TableCell className="text-black border-r-[2px] border-black">{creator.phone || "N/A"}</TableCell>
+                      <TableCell className="border-r-[2px] border-black">{getStatusBadge(creator.verified, creator.approved)}</TableCell>
+                      <TableCell className="border-r-[2px] border-black">
                         {creator.onboarding?.completed ? (
                           <Badge variant="default" className="bg-green-500 text-white border border-green-600 rounded-md px-2 py-1">
                             <CheckCircle2 className="w-3 h-3 mr-1.5" />
@@ -345,6 +354,7 @@ const CreatorsPage = () => {
                           variant="outline"
                           size="sm"
                           onClick={() => openCreatorDetails(creator)}
+                          className="bg-white hover:bg-[#828BF8] hover:text-white text-black font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
                         >
                           View Details
                         </Button>
@@ -360,10 +370,10 @@ const CreatorsPage = () => {
 
       {/* Creator Details Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-[98vw] min-w-[70vw] max-h-[90vh] overflow-y-auto w-full px-8">
-          <DialogHeader>
-            <DialogTitle>Creator Details</DialogTitle>
-            <DialogDescription>
+        <DialogContent className="max-w-[98vw] min-w-[70vw] max-h-[90vh] overflow-y-auto w-full px-8 bg-white border-[4px] border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+          <DialogHeader className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black -mx-8 -mt-8 px-8 pt-6 pb-4 mb-6">
+            <DialogTitle className="text-white font-black uppercase tracking-tight text-2xl">Creator Details</DialogTitle>
+            <DialogDescription className="text-[#FEF18C] font-bold mt-2">
               Complete information for {selectedCreator?.firstName} {selectedCreator?.lastName}
             </DialogDescription>
           </DialogHeader>
