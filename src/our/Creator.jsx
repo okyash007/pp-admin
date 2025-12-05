@@ -45,6 +45,8 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
   const [isEditingRazorpay, setIsEditingRazorpay] = useState(false);
   const [razorpayAccountId, setRazorpayAccountId] = useState(creator?.razorpay_account_id || "");
   const [isSavingRazorpay, setIsSavingRazorpay] = useState(false);
+  const [isUpdatingSubscription, setIsUpdatingSubscription] = useState(false);
+  const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
   const [alertDialog, setAlertDialog] = useState({ open: false, message: "", type: "info" });
 
   // Sync razorpay_account_id when creator prop changes
@@ -130,6 +132,55 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
   const handleCancelEditRazorpay = () => {
     setRazorpayAccountId(creator?.razorpay_account_id || "");
     setIsEditingRazorpay(false);
+  };
+
+  const handleUpdateSubscriptionStatus = async (newStatus) => {
+    if (!creator?._id) {
+      console.error('Creator ID not found');
+      return;
+    }
+
+    if (!["free", "pro"].includes(newStatus)) {
+      setAlertDialog({ open: true, message: 'Invalid subscription status', type: "error" });
+      return;
+    }
+
+    setIsUpdatingSubscription(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/creator/profile/${creator._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subscription_status: newStatus
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update subscription status');
+      }
+
+      const result = await response.json();
+      const updatedCreator = result.data || result;
+      
+      // Call the parent component's update function if provided
+      if (onCreatorUpdate) {
+        onCreatorUpdate(updatedCreator);
+      }
+      
+      // Show success message
+      setSubscriptionSuccess(true);
+      setTimeout(() => setSubscriptionSuccess(false), 3000);
+      
+      console.log('Subscription status updated successfully:', updatedCreator);
+    } catch (error) {
+      console.error('Error updating subscription status:', error);
+      setAlertDialog({ open: true, message: `Error updating subscription status: ${error.message}`, type: "error" });
+    } finally {
+      setIsUpdatingSubscription(false);
+    }
   };
 
   const handleApproveCreator = async () => {
@@ -386,12 +437,89 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
 
           <Separator className="my-6" />
 
-          {/* Success Message */}
+          {/* Subscription Status Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+              <CreditCard className="w-5 h-5 mr-2" />
+              Subscription Status
+            </h3>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="space-y-2">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Current Status</span>
+                    <div className="flex items-center gap-2">
+                      <Badge 
+                        variant={creator.subscription_status === "pro" ? "default" : "outline"}
+                        className={
+                          creator.subscription_status === "pro" 
+                            ? "bg-purple-100 text-purple-800 border-purple-200 font-bold" 
+                            : "bg-gray-100 text-gray-800 border-gray-200 font-bold"
+                        }
+                      >
+                        {creator.subscription_status === "pro" ? "PRO" : "FREE"}
+                      </Badge>
+                      {creator.subscription_id && (
+                        <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                          ID: {creator.subscription_id}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 ml-4">
+                  {creator.subscription_status === "free" ? (
+                    <Button
+                      onClick={() => handleUpdateSubscriptionStatus("pro")}
+                      disabled={isUpdatingSubscription}
+                      size="sm"
+                      className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white"
+                    >
+                      {isUpdatingSubscription ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <CheckCircle2 className="w-4 h-4" />
+                      )}
+                      <span>{isUpdatingSubscription ? 'Activating...' : 'Activate Pro'}</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleUpdateSubscriptionStatus("free")}
+                      disabled={isUpdatingSubscription}
+                      size="sm"
+                      variant="outline"
+                      className="flex items-center space-x-2"
+                    >
+                      {isUpdatingSubscription ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <XCircle className="w-4 h-4" />
+                      )}
+                      <span>{isUpdatingSubscription ? 'Deactivating...' : 'Deactivate Pro'}</span>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Separator className="my-6" />
+
+          {/* Success Messages */}
           {approveSuccess && (
             <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center space-x-2">
               <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
               <span className="text-green-800 dark:text-green-200 font-medium">
                 Creator approved successfully!
+              </span>
+            </div>
+          )}
+
+          {subscriptionSuccess && (
+            <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center space-x-2">
+              <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
+              <span className="text-green-800 dark:text-green-200 font-medium">
+                Subscription status updated successfully!
               </span>
             </div>
           )}

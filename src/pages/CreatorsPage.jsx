@@ -35,7 +35,8 @@ import {
   Search,
   Filter,
   X,
-  Clock
+  Clock,
+  Crown
 } from "lucide-react";
 
 async function getCreators(token) {
@@ -63,6 +64,7 @@ const CreatorsPage = () => {
   // Filter states
   const [approvedFilter, setApprovedFilter] = useState("all");
   const [onboardingFilter, setOnboardingFilter] = useState("all");
+  const [subscriptionFilter, setSubscriptionFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -94,12 +96,14 @@ const CreatorsPage = () => {
       c => c.onboarding?.completed
     ).length;
     const verified = creators.filter(c => c.verified).length;
+    const proUsers = creators.filter(c => c.subscription_status === "pro").length;
     
     return {
       total,
       approved,
       onboardingCompleted,
       verified,
+      proUsers,
     };
   }, [creators]);
 
@@ -113,6 +117,10 @@ const CreatorsPage = () => {
       // Onboarding filter
       if (onboardingFilter === "completed" && !creator.onboarding?.completed) return false;
       if (onboardingFilter === "incomplete" && creator.onboarding?.completed) return false;
+
+      // Subscription filter
+      if (subscriptionFilter === "pro" && creator.subscription_status !== "pro") return false;
+      if (subscriptionFilter === "free" && creator.subscription_status !== "free") return false;
 
       // Search filter
       if (searchQuery) {
@@ -130,7 +138,7 @@ const CreatorsPage = () => {
 
       return true;
     });
-  }, [creators, approvedFilter, onboardingFilter, searchQuery]);
+  }, [creators, approvedFilter, onboardingFilter, subscriptionFilter, searchQuery]);
 
   const getStatusBadge = (verified, approved) => {
     if (approved && verified) {
@@ -166,11 +174,13 @@ const CreatorsPage = () => {
   const clearFilters = () => {
     setApprovedFilter("all");
     setOnboardingFilter("all");
+    setSubscriptionFilter("all");
     setSearchQuery("");
   };
 
   const hasActiveFilters = approvedFilter !== "all" || 
     onboardingFilter !== "all" || 
+    subscriptionFilter !== "all" ||
     searchQuery !== "";
 
   if (loading) {
@@ -180,7 +190,7 @@ const CreatorsPage = () => {
   return (
     <div className="space-y-6">
       {/* Analytics Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-black text-black uppercase tracking-tight">Total Creators</CardTitle>
@@ -227,6 +237,23 @@ const CreatorsPage = () => {
             </p>
           </CardContent>
         </Card>
+
+        <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-black text-black uppercase tracking-tight">Pro Users</CardTitle>
+            <div className="h-10 w-10 bg-gradient-to-br from-[#A855F7] to-[#9333EA] border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+              <Crown className="h-5 w-5 text-white" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-black text-black">{analytics.proUsers}</div>
+            <p className="text-xs font-bold text-black/60 mt-1">
+              {analytics.total > 0 
+                ? `${Math.round((analytics.proUsers / analytics.total) * 100)}% pro users`
+                : "0% pro users"}
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Filters Section */}
@@ -251,7 +278,7 @@ const CreatorsPage = () => {
           </div>
         </CardHeader>
         <CardContent className="p-6">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-black z-10" />
@@ -286,6 +313,18 @@ const CreatorsPage = () => {
                 <SelectItem value="incomplete">Incomplete</SelectItem>
               </SelectContent>
             </Select>
+
+            {/* Subscription Filter */}
+            <Select value={subscriptionFilter} onValueChange={setSubscriptionFilter}>
+              <SelectTrigger className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
+                <SelectValue placeholder="Subscription Status" />
+              </SelectTrigger>
+              <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <SelectItem value="all">All Subscription Status</SelectItem>
+                <SelectItem value="pro">Pro</SelectItem>
+                <SelectItem value="free">Free</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
@@ -310,6 +349,7 @@ const CreatorsPage = () => {
                   <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Email</TableHead>
                   <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Phone</TableHead>
                   <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Status</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Subscription</TableHead>
                   <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Onboarding</TableHead>
                   <TableHead className="font-black text-black uppercase text-xs">Actions</TableHead>
                 </TableRow>
@@ -317,7 +357,7 @@ const CreatorsPage = () => {
               <TableBody>
                 {filteredCreators.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-black/60 font-bold border-b-[2px] border-black">
+                    <TableCell colSpan={8} className="text-center py-8 text-black/60 font-bold border-b-[2px] border-black">
                       No creators found matching the filters
                     </TableCell>
                   </TableRow>
@@ -336,6 +376,17 @@ const CreatorsPage = () => {
                       <TableCell className="text-black border-r-[2px] border-black">{creator.email}</TableCell>
                       <TableCell className="text-black border-r-[2px] border-black">{creator.phone || "N/A"}</TableCell>
                       <TableCell className="border-r-[2px] border-black">{getStatusBadge(creator.verified, creator.approved)}</TableCell>
+                      <TableCell className="border-r-[2px] border-black">
+                        <Badge 
+                          className={
+                            creator.subscription_status === "pro" 
+                              ? "bg-purple-500 text-white border border-purple-600 rounded-md px-2 py-1 font-black" 
+                              : "bg-gray-500 text-white border border-gray-600 rounded-md px-2 py-1 font-black"
+                          }
+                        >
+                          {creator.subscription_status === "pro" ? "PRO" : "FREE"}
+                        </Badge>
+                      </TableCell>
                       <TableCell className="border-r-[2px] border-black">
                         {creator.onboarding?.completed ? (
                           <Badge variant="default" className="bg-green-500 text-white border border-green-600 rounded-md px-2 py-1">
