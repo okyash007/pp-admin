@@ -194,7 +194,7 @@ const CreatorsPage = () => {
         <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-black text-black uppercase tracking-tight">Total Creators</CardTitle>
-            <div className="h-10 w-10 bg-gradient-to-br from-[#828BF8] to-[#5C66D4] border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <div className="h-10 w-10 bg-linear-to-br from-[#828BF8] to-[#5C66D4] border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
               <Users className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
@@ -207,7 +207,7 @@ const CreatorsPage = () => {
         <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-black text-black uppercase tracking-tight">Onboarding Completed</CardTitle>
-            <div className="h-10 w-10 bg-gradient-to-br from-[#AAD6B8] to-[#7FB896] border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <div className="h-10 w-10 bg-linear-to-br from-[#AAD6B8] to-[#7FB896] border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
               <CheckCircle2 className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
@@ -224,7 +224,7 @@ const CreatorsPage = () => {
         <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-black text-black uppercase tracking-tight">Approved Creators</CardTitle>
-            <div className="h-10 w-10 bg-gradient-to-br from-[#FEF18C] to-[#FEF18C]/80 border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <div className="h-10 w-10 bg-linear-to-br from-[#FEF18C] to-[#FEF18C]/80 border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
               <UserCheck className="h-5 w-5 text-black" />
             </div>
           </CardHeader>
@@ -241,7 +241,7 @@ const CreatorsPage = () => {
         <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-black text-black uppercase tracking-tight">Pro Users</CardTitle>
-            <div className="h-10 w-10 bg-gradient-to-br from-[#A855F7] to-[#9333EA] border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <div className="h-10 w-10 bg-linear-to-br from-[#A855F7] to-[#9333EA] border-[3px] border-black rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
               <Crown className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
@@ -258,7 +258,7 @@ const CreatorsPage = () => {
 
       {/* Filters Section */}
       <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <CardHeader className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black">
+        <CardHeader className="bg-linear-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Filter className="h-5 w-5 text-white" />
@@ -269,7 +269,7 @@ const CreatorsPage = () => {
                 variant="ghost"
                 size="sm"
                 onClick={clearFilters}
-                className="h-8 bg-white hover:bg-[#FEF18C] text-black font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                className="h-8 bg-white hover:bg-[#FEF18C] text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
               >
                 <X className="h-4 w-4 mr-2" />
                 Clear Filters
@@ -292,7 +292,7 @@ const CreatorsPage = () => {
 
             {/* Approved Filter */}
             <Select value={approvedFilter} onValueChange={setApprovedFilter}>
-              <SelectTrigger className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
+              <SelectTrigger className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
                 <SelectValue placeholder="Approval Status" />
               </SelectTrigger>
               <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
@@ -304,7 +304,7 @@ const CreatorsPage = () => {
 
             {/* Onboarding Filter */}
             <Select value={onboardingFilter} onValueChange={setOnboardingFilter}>
-              <SelectTrigger className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
+              <SelectTrigger className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
                 <SelectValue placeholder="Onboarding Status" />
               </SelectTrigger>
               <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
@@ -316,7 +316,7 @@ const CreatorsPage = () => {
 
             {/* Subscription Filter */}
             <Select value={subscriptionFilter} onValueChange={setSubscriptionFilter}>
-              <SelectTrigger className="bg-white border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
+              <SelectTrigger className="bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:border-[#828BF8]">
                 <SelectValue placeholder="Subscription Status" />
               </SelectTrigger>
               <SelectContent className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
@@ -331,7 +331,7 @@ const CreatorsPage = () => {
 
       {/* Creators Table */}
       <Card className="bg-white border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <CardHeader className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black">
+        <CardHeader className="bg-linear-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black">
           <div className="flex items-center justify-between">
             <CardTitle className="text-white font-black uppercase tracking-tight">Creators List</CardTitle>
             <CardDescription className="text-[#FEF18C] font-bold text-sm">
@@ -343,21 +343,21 @@ const CreatorsPage = () => {
           <div className="border-t-[3px] border-black">
             <Table>
               <TableHeader>
-                <TableRow className="bg-[#FEF18C]/20 border-b-[2px] border-black">
-                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Name</TableHead>
-                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Username</TableHead>
-                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Email</TableHead>
-                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Phone</TableHead>
-                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Status</TableHead>
-                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Subscription</TableHead>
-                  <TableHead className="font-black text-black uppercase text-xs border-r-[2px] border-black">Onboarding</TableHead>
+                <TableRow className="bg-[#FEF18C]/20 border-b-2 border-black">
+                  <TableHead className="font-black text-black uppercase text-xs border-r-2 border-black">Name</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-2 border-black">Username</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-2 border-black">Email</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-2 border-black">Phone</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-2 border-black">Status</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-2 border-black">Subscription</TableHead>
+                  <TableHead className="font-black text-black uppercase text-xs border-r-2 border-black">Onboarding</TableHead>
                   <TableHead className="font-black text-black uppercase text-xs">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredCreators.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-black/60 font-bold border-b-[2px] border-black">
+                    <TableCell colSpan={8} className="text-center py-8 text-black/60 font-bold border-b-2 border-black">
                       No creators found matching the filters
                     </TableCell>
                   </TableRow>
@@ -365,18 +365,18 @@ const CreatorsPage = () => {
                   filteredCreators.map((creator, index) => (
                     <TableRow 
                       key={creator.creator_id || creator._id}
-                      className={`border-b-[2px] border-black hover:bg-[#FEF18C]/10 transition-colors ${
+                      className={`border-b-2 border-black hover:bg-[#FEF18C]/10 transition-colors ${
                         index % 2 === 0 ? 'bg-white' : 'bg-[#FEF18C]/5'
                       }`}
                     >
-                      <TableCell className="font-black text-black border-r-[2px] border-black">
+                      <TableCell className="font-black text-black border-r-2 border-black">
                         {creator.firstName} {creator.lastName}
                       </TableCell>
-                      <TableCell className="font-bold text-black border-r-[2px] border-black">@{creator.username}</TableCell>
-                      <TableCell className="text-black border-r-[2px] border-black">{creator.email}</TableCell>
-                      <TableCell className="text-black border-r-[2px] border-black">{creator.phone || "N/A"}</TableCell>
-                      <TableCell className="border-r-[2px] border-black">{getStatusBadge(creator.verified, creator.approved)}</TableCell>
-                      <TableCell className="border-r-[2px] border-black">
+                      <TableCell className="font-bold text-black border-r-2 border-black">@{creator.username}</TableCell>
+                      <TableCell className="text-black border-r-2 border-black">{creator.email}</TableCell>
+                      <TableCell className="text-black border-r-2 border-black">{creator.phone || "N/A"}</TableCell>
+                      <TableCell className="border-r-2 border-black">{getStatusBadge(creator.verified, creator.approved)}</TableCell>
+                      <TableCell className="border-r-2 border-black">
                         <Badge 
                           className={
                             creator.subscription_status === "pro" 
@@ -387,7 +387,7 @@ const CreatorsPage = () => {
                           {creator.subscription_status === "pro" ? "PRO" : "FREE"}
                         </Badge>
                       </TableCell>
-                      <TableCell className="border-r-[2px] border-black">
+                      <TableCell className="border-r-2 border-black">
                         {creator.onboarding?.completed ? (
                           <Badge variant="default" className="bg-green-500 text-white border border-green-600 rounded-md px-2 py-1">
                             <CheckCircle2 className="w-3 h-3 mr-1.5" />
@@ -405,7 +405,7 @@ const CreatorsPage = () => {
                           variant="outline"
                           size="sm"
                           onClick={() => openCreatorDetails(creator)}
-                          className="bg-white hover:bg-[#828BF8] hover:text-white text-black font-black border-[2px] border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
+                          className="bg-white hover:bg-[#828BF8] hover:text-white text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-200"
                         >
                           View Details
                         </Button>
@@ -421,8 +421,8 @@ const CreatorsPage = () => {
 
       {/* Creator Details Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-[98vw] min-w-[70vw] max-h-[90vh] overflow-y-auto w-full px-8 bg-white border-[4px] border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-          <DialogHeader className="bg-gradient-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black -mx-8 -mt-8 px-8 pt-6 pb-4 mb-6">
+        <DialogContent className="max-w-[98vw] min-w-[70vw] max-h-[90vh] overflow-y-auto w-full px-8 bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+          <DialogHeader className="bg-linear-to-r from-[#828BF8] to-[#828BF8]/90 border-b-[3px] border-black -mx-8 -mt-8 px-8 pt-6 pb-4 mb-6">
             <DialogTitle className="text-white font-black uppercase tracking-tight text-2xl">Creator Details</DialogTitle>
             <DialogDescription className="text-[#FEF18C] font-bold mt-2">
               Complete information for {selectedCreator?.firstName} {selectedCreator?.lastName}
