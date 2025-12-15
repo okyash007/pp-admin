@@ -171,6 +171,18 @@ const CreatorsPage = () => {
     }
   };
 
+  const handleCreatorDelete = (creatorId) => {
+    // Remove the creator from the list
+    setCreators(creators.filter(c => 
+      c._id !== creatorId && c.creator_id !== creatorId
+    ));
+    // Close the dialog
+    setDialogOpen(false);
+    setSelectedCreator(null);
+    // Refresh the list to ensure consistency
+    fetchCreators();
+  };
+
   const clearFilters = () => {
     setApprovedFilter("all");
     setOnboardingFilter("all");
@@ -433,6 +445,7 @@ const CreatorsPage = () => {
               creator={selectedCreator} 
               embedded 
               onCreatorUpdate={handleCreatorUpdate}
+              onCreatorDelete={handleCreatorDelete}
             />
           )}
         </DialogContent>

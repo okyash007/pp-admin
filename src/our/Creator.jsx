@@ -33,10 +33,12 @@ import {
   Edit,
   Save,
   X,
-  DollarSign
+  DollarSign,
+  Trash2,
+  AlertTriangle
 } from "lucide-react";
 
-const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
+const Creator = ({ creator, onCreatorUpdate, onCreatorDelete, embedded = false }) => {
   const navigate = useNavigate();
   const [identityDialogOpen, setIdentityDialogOpen] = useState(false);
   const [bankDialogOpen, setBankDialogOpen] = useState(false);
@@ -47,6 +49,7 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
   const [isSavingRazorpay, setIsSavingRazorpay] = useState(false);
   const [isUpdatingSubscription, setIsUpdatingSubscription] = useState(false);
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [alertDialog, setAlertDialog] = useState({ open: false, message: "", type: "info" });
 
   // Sync razorpay_account_id when creator prop changes
@@ -180,6 +183,53 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
       setAlertDialog({ open: true, message: `Error updating subscription status: ${error.message}`, type: "error" });
     } finally {
       setIsUpdatingSubscription(false);
+    }
+  };
+
+  const handleDeleteCreator = async () => {
+    if (!creator?._id) {
+      console.error('Creator ID not found');
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/creator/${creator._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete creator');
+      }
+
+      const result = await response.json();
+      
+      // Show success message
+      setAlertDialog({ 
+        open: true, 
+        message: `Creator "${creator.username}" and all associated data have been deleted successfully.`, 
+        type: "success" 
+      });
+      
+      // Call the parent's delete callback if provided (to refresh the list)
+      if (onCreatorDelete) {
+        onCreatorDelete(creator._id || creator.creator_id);
+      } else {
+        // Fallback: Navigate to creators list after a short delay
+        setTimeout(() => {
+          navigate('/creators');
+        }, 2000);
+      }
+      
+      console.log('Creator deleted successfully:', result);
+    } catch (error) {
+      console.error('Error deleting creator:', error);
+      setAlertDialog({ open: true, message: `Error deleting creator: ${error.message}`, type: "error" });
+      setIsDeleting(false);
     }
   };
 
@@ -505,6 +555,58 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
 
           <Separator className="my-6" />
 
+          {/* Delete User Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+              <AlertTriangle className="w-5 h-5 mr-2 text-red-500" />
+              Danger Zone
+            </h3>
+            <div className="p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg">
+              <div className="space-y-3">
+                <div>
+                  <h4 className="text-base font-semibold text-red-900 dark:text-red-200 mb-1">
+                    Delete Creator Account
+                  </h4>
+                  <p className="text-sm text-red-700 dark:text-red-300">
+                    This action will permanently delete the creator account and all associated data including:
+                  </p>
+                  <ul className="text-sm text-red-700 dark:text-red-300 mt-2 ml-4 list-disc space-y-1">
+                    <li>Creator profile and settings</li>
+                    <li>All pages (overlay, tip page, link tree)</li>
+                    <li>All tips and transactions</li>
+                    <li>Onboarding information</li>
+                    <li>Tickets and notifications</li>
+                  </ul>
+                  <p className="text-sm font-semibold text-red-900 dark:text-red-200 mt-3">
+                    This action cannot be undone!
+                  </p>
+                </div>
+                <Button
+                  onClick={handleDeleteCreator}
+                  disabled={isDeleting}
+                  size="sm"
+                  variant="destructive"
+                  className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white"
+                  type="button"
+                >
+                  {isDeleting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4" />
+                      <span>Delete Creator</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <Separator className="my-6" />
+
           {/* Success Messages */}
           {approveSuccess && (
             <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center space-x-2">
@@ -523,6 +625,7 @@ const Creator = ({ creator, onCreatorUpdate, embedded = false }) => {
               </span>
             </div>
           )}
+
 
           {/* Warning Message if Razorpay Account ID is missing */}
           {!creator.approved && !(creator.razorpay_account_id || razorpayAccountId.trim()) && (
